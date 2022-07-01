@@ -98,7 +98,7 @@ class RecordWindows extends RecordPlatform {
       Random.secure().nextInt(1000000000).toRadixString(16),
     );
 
-    path = p.withoutExtension(p.normalize(path));
+    path = p.normalize(path);
 
     final file = File(path!);
     if (file.existsSync()) await file.delete();
