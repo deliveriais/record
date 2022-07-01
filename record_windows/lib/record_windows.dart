@@ -86,16 +86,21 @@ class RecordWindows extends RecordPlatform {
 
   @override
   Future<void> start({
-    String path,
+    String? path,
     AudioEncoder encoder = AudioEncoder.aacLc,
     int bitRate = 128000,
     int samplingRate = 44100,
   }) async {
     await stop();
 
+    path ??= p.join(
+      Directory.systemTemp.path,
+      Random.secure().nextInt(1000000000).toRadixString(16),
+    );
+
     path = p.withoutExtension(p.normalize(path));
 
-    final file = File(path);
+    final file = File(path!);
     if (file.existsSync()) await file.delete();
 
     _path = path;
