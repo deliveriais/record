@@ -86,7 +86,7 @@ class RecordWindows extends RecordPlatform {
 
   @override
   Future<void> start({
-    String? path,
+    String path,
     AudioEncoder encoder = AudioEncoder.aacLc,
     int bitRate = 128000,
     int samplingRate = 44100,
@@ -99,7 +99,6 @@ class RecordWindows extends RecordPlatform {
     );
 
     path = p.withoutExtension(p.normalize(path));
-    path += _getFileNameSuffix(encoder);
 
     final file = File(path);
     if (file.existsSync()) await file.delete();
