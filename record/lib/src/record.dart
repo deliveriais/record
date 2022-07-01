@@ -2,9 +2,6 @@ import 'dart:async';
 
 import 'package:record_platform_interface/record_platform_interface.dart';
 
-/// All states of the recorder
-enum RecordState { paused, resumed, stopped }
-
 /// Audio recorder API
 class Record implements RecordPlatform {
   @override
@@ -22,36 +19,19 @@ class Record implements RecordPlatform {
     );
   }
 
-  StreamController<RecordState>? _stateStreamCtrl;
-  StreamController<Amplitude>? _amplitudeStreamCtrl;
-
   @override
-  Future<String?> stop() async {
-    final result = RecordPlatform.instance.stop();
-
-    if (_stateStreamCtrl?.hasListener ?? false) {
-      _stateStreamCtrl?.add(RecordState.stopped);
-    }
-
-    return result;
+  Future<String?> stop() {
+    return RecordPlatform.instance.stop();
   }
 
   @override
-  Future<void> pause() async {
-    await RecordPlatform.instance.pause();
-
-    if (_stateStreamCtrl?.hasListener ?? false) {
-      _stateStreamCtrl?.add(RecordState.paused);
-    }
+  Future<void> pause() {
+    return RecordPlatform.instance.pause();
   }
 
   @override
-  Future<void> resume() async {
-    await RecordPlatform.instance.resume();
-
-    if (_stateStreamCtrl?.hasListener ?? false) {
-      _stateStreamCtrl?.add(RecordState.resumed);
-    }
+  Future<void> resume() {
+    return RecordPlatform.instance.resume();
   }
 
   @override
@@ -71,9 +51,6 @@ class Record implements RecordPlatform {
 
   @override
   Future<void> dispose() {
-    _stateStreamCtrl?.close();
-    _amplitudeStreamCtrl?.close();
-
     return RecordPlatform.instance.dispose();
   }
 
@@ -85,50 +62,5 @@ class Record implements RecordPlatform {
   @override
   Future<bool> isEncoderSupported(AudioEncoder encoder) {
     return RecordPlatform.instance.isEncoderSupported(encoder);
-  }
-
-  /// Listen to recorder states [RecordState].
-  ///
-  /// Provides pause, resume and stop states.
-  Stream<RecordState> onStateChanged() {
-    _stateStreamCtrl ??= StreamController(
-      onCancel: () {
-        _stateStreamCtrl?.close();
-        _stateStreamCtrl = null;
-      },
-    );
-
-    return _stateStreamCtrl!.stream;
-  }
-
-  /// Listen to amplitude.
-  Stream<Amplitude> onAmplitudeChanged(Duration interval) {
-    _amplitudeStreamCtrl ??= StreamController(
-      onCancel: () {
-        _amplitudeStreamCtrl?.close();
-        _amplitudeStreamCtrl = null;
-      },
-      onListen: () => _updateAmplitudeAtInterval(interval),
-    );
-
-    return _amplitudeStreamCtrl!.stream;
-  }
-
-  Future<void> _updateAmplitudeAtInterval(Duration interval) async {
-    Future<bool> shouldUpdate() {
-      var result = _amplitudeStreamCtrl != null;
-      result &= !(_amplitudeStreamCtrl?.isClosed ?? true);
-      result &= _amplitudeStreamCtrl?.hasListener ?? false;
-
-      return result ? isRecording() : Future.value(false);
-    }
-
-    while (await shouldUpdate()) {
-      await Future.delayed(interval);
-
-      if (_amplitudeStreamCtrl?.hasListener ?? false) {
-        _amplitudeStreamCtrl?.add(await getAmplitude());
-      }
-    }
   }
 }

@@ -1,6 +1,5 @@
 package com.llfbandit.record;
 
-import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
@@ -21,19 +20,14 @@ class MediaRecorder implements RecorderBase {
   private android.media.MediaRecorder recorder = null;
   private String path;
   private Double maxAmplitude = -160.0;
-  private final Context context;
-
-  MediaRecorder(Context context) {
-    this.context = context;
-  }
 
   @Override
   public void start(
-      @NonNull String path,
-      String encoder,
-      int bitRate,
-      int samplingRate,
-      @NonNull Result result
+          @NonNull String path,
+          String encoder,
+          int bitRate,
+          int samplingRate,
+          @NonNull Result result
   ) {
     stopRecording();
 
@@ -41,10 +35,7 @@ class MediaRecorder implements RecorderBase {
 
     this.path = path;
 
-    recorder = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        ? new android.media.MediaRecorder(context)
-        : new android.media.MediaRecorder();
-
+    recorder = new android.media.MediaRecorder();
     recorder.setAudioSource(android.media.MediaRecorder.AudioSource.DEFAULT);
     recorder.setAudioEncodingBitRate(bitRate);
     recorder.setAudioSamplingRate(samplingRate);
