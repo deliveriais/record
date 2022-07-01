@@ -16,7 +16,7 @@ dependencies:
   record_windows:
     git:
       path: record_windows
-      ref: 7f40c256497625d3c0cb472969efc9e4353a3155
+      ref: 564e214506dd8ba782024926c88bbc7918e35463
       url: https://github.com/AmirhosseinShk/record
   record_macos: '>=0.1.0 < 2.0.0'
   record_linux: '>=0.1.0 < 2.0.0'
