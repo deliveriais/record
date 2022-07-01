@@ -93,11 +93,6 @@ class RecordWindows extends RecordPlatform {
   }) async {
     await stop();
 
-    path ??= p.join(
-      Directory.systemTemp.path,
-      Random.secure().nextInt(1000000000).toRadixString(16),
-    );
-
     path = p.withoutExtension(p.normalize(path));
 
     final file = File(path);
