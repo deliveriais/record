@@ -17,7 +17,7 @@ dependencies:
     git:
       path: record_windows
       ref: 749f5de6ec5c9667fcb9b17e014ea8ba8761e4db
-      url: https://github.com/deliver-iais/record
+      url: https://github.com/deliveriais/record
   record_macos: '>=0.1.0 < 2.0.0'
   record_linux: '>=0.1.0 < 2.0.0'
 
